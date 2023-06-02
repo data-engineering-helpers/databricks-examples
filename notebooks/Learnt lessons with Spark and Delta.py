@@ -9,7 +9,7 @@
 # MAGIC of both Spark and Delta Lake.
 # MAGIC
 # MAGIC ## References
-# MAGIC * [GitHub - DataBricks examples]() (Git repository hosting this notebook)
+# MAGIC * [GitHub - DataBricks examples](https://github.com/data-engineering-helpers/databricks-examples) (Git repository hosting this notebook)
 # MAGIC * [Delta Lake homepage](https://delta.io)
 
 # COMMAND ----------
