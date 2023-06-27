@@ -65,7 +65,7 @@ $ open ~/Library/Jupyter/runtime/jpserver-*-open.html
     started through Spark Connect, it cannot be stopped that way;
     the first cell may thus be re-executed at will with no further
     side-effect on the Spark session
-  + The second cell starts, or uses when already existing,
+  + The same first cell then starts, or uses when already existing,
     the Spark session through Spark Connect
 
 # Use cases
