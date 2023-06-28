@@ -74,6 +74,78 @@ $ open ~/Library/Jupyter/runtime/jpserver-*-open.html
 # Initial setup
 
 ## PySpark and Jupyter
+* As per the official
+  [Apache Spark documentation](https://spark.apache.org/docs/latest/api/python/getting_started/install.html),
+  PyPi-installed PySpark (`pip install pyspark[connect]`) comes with
+  Spark Connect from Spark version 3.4 or later. However, as of Spark
+  version up to 3.4.1, the PySpark installation lacks the two new
+  administration scripts allowing to start and to stop the Spark Connect
+  server. For convenience, these two scripts have therefore been copied into
+  this Git repository, in the [`tools/` directory](tools/). They may then simply
+  copied in the PySpark `sbin` directory, once PySpark has been installed
+  with `pip`
+
+* Install PySpark and JupyterLab, along with a few other Python libraries,
+  from PyPi:
+```bash
+$ pip install -U pyspark[connect,sql,pandas_on_spark] plotly pyvis jupyterlab
+```
+
+* Add the following in the Bash/Zsh init script:
+```bash
+$ cat >> ~/.bashrc << _EOF
+
+# Spark
+PY_LIBDIR="$(python -mpip show pyspark|grep "^Location:"|cut -d' ' -f2,2)"
+export SPARK_VERSION="\$(python -mpip show pyspark|grep "^Version:"|cut -d' ' -f2,2)"
+export SPARK_HOME="\$PY_LIBDIR/pyspark"
+export PATH="\$SPARK_HOME/sbin:\$PATH"
+export PYSPARK_PYTHON="\$(which python3)"
+export PYSPARK_DRIVER_PYTHON='jupyter'
+export PYSPARK_DRIVER_PYTHON_OPTS='lab --no-browser --port=8889'
+
+_EOF
+```
+
+* Re-read the Shell init scripts:
+```
+$ exec bash
+```
+
+* Copy the two Spark connect administrative scripts into the PySpark
+  installation:
+```bash
+$ cp tools/st*-connect*.sh $SPARK_HOME/sbin/
+```
+
+* Check that the scripts are installed correctly:
+```bash
+$ ls -lFh $SPARK_HOME/sbin/*connect*.sh
+-rwxr-xr-x  1 user  staff   1.5K Jun 28 16:54 $PY_LIBDIR/pyspark/sbin/start-connect-server.sh*
+-rwxr-xr-x  1 user  staff   1.0K Jun 28 16:54 $PY_LIBDIR/pyspark/sbin/stop-connect-server.sh*
+```
+
+* Add the following Shell aliases to start and stop Spark Connect server:
+```bash
+$ cat >> ~/.bash_aliases << _EOF
+
+# Spark Connect
+alias sparkconnectstart='start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:\$SPARK_VERSION,io.delta:delta-core_2.12:2.4.0 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"'
+alias sparkconnectstop='stop-connect-server.sh'
+# PySpark
+alias pysparkdelta='pyspark --packages io.delta:delta-core_2.12:2.4.0 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"'
+
+_EOF
+```
+
+* Re-read the Shell aliases:
+```bash
+. ~/.bash_aliases
+```
+
+### Install native Spark manually
+* That section is kept for reference only. It is normally not needed
+
 * Install Spark/PySpark manually, _e.g._ with Spark 3.4.1:
 ```bash
 $ export SPARK_VERSION="3.4.1"
