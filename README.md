@@ -36,20 +36,20 @@ to process and analyze data.
 * [BMC - Integrate PySpark with Jupyter](https://www.bmc.com/blogs/jupyter-notebooks-apache-spark/)
 
 # Quick start
-* Launch Spark Connect server:
+* From a dedicated terminal window/tab, launch Spark Connect server.
+  Note that the `SPARK_REMOTE` environment variable should not be set at this
+  stage, otherwise the Spark Connect server will try to connect to the
+  corresponding Spark Connect server and will therefore not start
 ```bash
 $ sparkconnectstart
 ```
 
-* If not already done so, setup the `SPARK_REMOTE` environment variable:
-```bash
-export SPARK_REMOTE="sc://localhost:15002"
-```
-
-* Launch PySpark from the command-line, which in turn launches Jupyter Lab
+* From the current terminal/tab, different from the window/tab having launched
+  the Spark Connect server, launch PySpark from the command-line, which in
+  turn launches Jupyter Lab
   + Follow the details given by PySpark to open Jupyter in a web browser
 ```bash
-$ pyspark
+$ export SPARK_REMOTE="sc://localhost:15002"; pyspark
 ...
 [C 2023-06-27 21:54:04.720 ServerApp] 
     
@@ -124,7 +124,6 @@ PY_LIBDIR="$(python -mpip show pyspark|grep "^Location:"|cut -d' ' -f2,2)"
 export SPARK_VERSION="\$(python -mpip show pyspark|grep "^Version:"|cut -d' ' -f2,2)"
 export SPARK_HOME="\$PY_LIBDIR/pyspark"
 export PATH="\$SPARK_HOME/sbin:\$PATH"
-export SPARK_REMOTE="sc://localhost:15002"
 export PYSPARK_PYTHON="\$(which python3)"
 export PYSPARK_DRIVER_PYTHON='jupyter'
 export PYSPARK_DRIVER_PYTHON_OPTS='lab --no-browser --port=8889'
@@ -155,7 +154,7 @@ $ ls -lFh $SPARK_HOME/sbin/*connect*.sh
 $ cat >> ~/.bash_aliases << _EOF
 
 # Spark Connect
-alias sparkconnectstart='start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:\$SPARK_VERSION,io.delta:delta-core_2.12:2.4.0 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"'
+alias sparkconnectstart=unset SPARK_REMOTE; start-connect-server.sh --packages org.apache.spark:spark-connect_2.12:\$SPARK_VERSION,io.delta:delta-core_2.12:2.4.0 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"'
 alias sparkconnectstop='stop-connect-server.sh'
 # PySpark
 alias pysparkdelta='pyspark --packages io.delta:delta-core_2.12:2.4.0 --conf "spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension" --conf "spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog"'
