@@ -1,8 +1,24 @@
 Examples of code with DataBricks
 ================================
 
+# Table of Content (ToC)
+* [Examples of code with DataBricks](#examples-of-code-with-databricks)
+* [Overview](#overview)
+  * [References](#references)
+    * [Spark](#spark)
+    * [Spark Connect](#spark-connect)
+    * [Jupyter](#jupyter)
+* [Quick start](#quick-start)
+* [Use cases](#use-cases)
+* [Initial setup](#initial-setup)
+  * [PySpark and Jupyter](#pyspark-and-jupyter)
+    * [Install native Spark manually](#install-native-spark-manually)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
+
 # Overview
-That [Git repository](https://github.com/data-engineering-helpers/databricks-examples)
+This
+[Git repository](https://github.com/data-engineering-helpers/databricks-examples)
 features use cases of good and bad practices when using Spark-based tools
 to process and analyze data.
 
@@ -10,10 +26,11 @@ to process and analyze data.
 
 ### Spark
 * [Apache Spark - Download Spark manually](https://spark.apache.org/docs/latest/api/python/getting_started/install.html#manually-downloading)
+* [Apache Spark - Doc - Getting started / Installation](https://spark.apache.org/docs/latest/api/python/getting_started/install.html)
 
 ### Spark Connect
-* [Apache Spark - Doc - Installation](https://spark.apache.org/docs/latest/api/python/getting_started/install.html)
-* [Apache Spark - Doc - Quick start Spark Connect](https://spark.apache.org/docs/latest/api/python/getting_started/quickstart_connect.html)
+* [Apache Spark - Doc - Spark Connect - Overview](https://spark.apache.org/docs/latest/spark-connect-overview.html)
+* [Apache Spark - Doc - Spark Connect - Quick start](https://spark.apache.org/docs/latest/api/python/getting_started/quickstart_connect.html)
 
 ### Jupyter
 * [BMC - Integrate PySpark with Jupyter](https://www.bmc.com/blogs/jupyter-notebooks-apache-spark/)
@@ -22,6 +39,11 @@ to process and analyze data.
 * Launch Spark Connect server:
 ```bash
 $ sparkconnectstart
+```
+
+* If not already done so, setup the `SPARK_REMOTE` environment variable:
+```bash
+export SPARK_REMOTE="sc://localhost:15002"
 ```
 
 * Launch PySpark from the command-line, which in turn launches Jupyter Lab
@@ -44,7 +66,7 @@ $ open ~/Library/Jupyter/runtime/jpserver-*-open.html
 ```
 
 * Open a notebook, for instance
-  [`jupyter-notebooks/simple-connect.ipynb`](https://github.com/data-engineering-helpers/databricks-examples/blob/main/jupyter-notebooks/simple-connect.ipynb)
+  [`ipython-notebooks/simple-connect.ipynb`](https://github.com/data-engineering-helpers/databricks-examples/blob/main/ipython-notebooks/simple-connect.ipynb)
   + Run the cells. The third cell should give a result like:
 ```txt
 +-------+--------+-------+-------+
@@ -60,7 +82,9 @@ $ open ~/Library/Jupyter/runtime/jpserver-*-open.html
 
 * Notes:
   + The first cell stops the initial Spark session,
-    which has been started by Spark without making use of Spark Connect.
+    when that latter has been started by Spark without making use of
+	Spark Connect, for instance when the `SPARK_REMOTE` environment
+	variable has not been set properly.
     There is a try-catch clause, as once the Spark session has been
     started through Spark Connect, it cannot be stopped that way;
     the first cell may thus be re-executed at will with no further
@@ -100,6 +124,7 @@ PY_LIBDIR="$(python -mpip show pyspark|grep "^Location:"|cut -d' ' -f2,2)"
 export SPARK_VERSION="\$(python -mpip show pyspark|grep "^Version:"|cut -d' ' -f2,2)"
 export SPARK_HOME="\$PY_LIBDIR/pyspark"
 export PATH="\$SPARK_HOME/sbin:\$PATH"
+export SPARK_REMOTE="sc://localhost:15002"
 export PYSPARK_PYTHON="\$(which python3)"
 export PYSPARK_DRIVER_PYTHON='jupyter'
 export PYSPARK_DRIVER_PYTHON_OPTS='lab --no-browser --port=8889'
