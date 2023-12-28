@@ -32,6 +32,11 @@ to process and analyze data.
 * [Apache Spark - Doc - Spark Connect - Overview](https://spark.apache.org/docs/latest/spark-connect-overview.html)
 * [Apache Spark - Doc - Spark Connect - Quick start](https://spark.apache.org/docs/latest/api/python/getting_started/quickstart_connect.html)
 
+### Python
+
+#### Python for geo-related analysis
+* [Data Engineering Helpers - Knowledge Sharing - Geo-related Python analysis](https://github.com/data-engineering-helpers/ks-cheat-sheets/blob/main/programming/python/geo/README.md)
+
 ### Jupyter
 * [BMC - Integrate PySpark with Jupyter](https://www.bmc.com/blogs/jupyter-notebooks-apache-spark/)
 
